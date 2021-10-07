@@ -15,6 +15,7 @@ public class UserThread extends Thread {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 
+	private boolean isActive = true;
 	private int channel;
 	private String username;
 
@@ -43,6 +44,7 @@ public class UserThread extends Thread {
 					getUsername() + " hat den Channel verlassen",
 					MessageType.Message, getChannel());
 			server.sendToChannel(leaveMessage);
+			setActive(false);
 			interrupt();
 			
 		} catch (ClassNotFoundException e) {
@@ -149,6 +151,7 @@ public class UserThread extends Thread {
 			out.writeObject(message);			
 		} catch (java.net.SocketException e) {
 			interrupt();
+			setActive(false);
 		}
 	
 	}
@@ -193,5 +196,19 @@ public class UserThread extends Thread {
 	 */
 	public void setChannel(int channel) {
 		this.channel = channel;
+	}
+
+	/**
+	 * @return the isActive
+	 */
+	public boolean isActive() {
+		return isActive;
+	}
+
+	/**
+	 * @param isActive the isActive to set
+	 */
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 }

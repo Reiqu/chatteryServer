@@ -84,7 +84,6 @@ public class Server {
 		userThreads.add(newUser);
 		newUser.start();	
 		
-		System.out.println("Aktuell im Chat: " + userThreads.size());
 	}
 	
 	
@@ -93,12 +92,14 @@ public class Server {
 	 */
 	public void sendToChannel(Message message) {
 		for(UserThread userThread : userThreads) {
-			try {
-				if (userThread.getChannel() == message.getChannel()) {
-					userThread.send(message);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (userThread.isActive() == true) {
+				try {
+					if (userThread.getChannel() == message.getChannel()) {
+						userThread.send(message);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}				
 			}
 		}
 	}
