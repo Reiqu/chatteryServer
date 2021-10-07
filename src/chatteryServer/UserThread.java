@@ -38,15 +38,14 @@ public class UserThread extends Thread {
 			// Gucke immer, ob Nachrichten eingehen und behandle sie
 			listenToNewMessages();
 		} catch (java.net.SocketException e) {
+			setActive(false);
 			
 			Message leaveMessage = new Message(
 					"Info", 
 					getUsername() + " hat den Channel verlassen",
 					MessageType.Message, getChannel());
 			server.sendToChannel(leaveMessage);
-			setActive(false);
 			interrupt();
-			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
