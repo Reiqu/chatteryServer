@@ -2,35 +2,27 @@ package shared;
 
 import java.io.Serializable;
 
-public class Message implements Serializable{
-
-
-	/**
-	 * 
-	 */
+public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
+	private MessageType type;
 	private String text;
 	private int channel;
 	
-	public Message(String name, String text, int channel) {
+	public Message(String name, String text, MessageType type, int channel) {
 		this.name = name;
 		this.text = text;
+		this.type = type;
 		this.channel = channel;	
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 	/*
 	 *  Getter / Setter
 	 */
-	
+
+
 	/**
 	 * @return the name
 	 */
@@ -71,5 +63,13 @@ public class Message implements Serializable{
 	 */
 	public void setChannel(int channel) {
 		this.channel = channel;
-	}	
+	}
+
+	/**
+	 * @return the type
+	 */
+	public MessageType getType() {
+		return type;
+	}
+
 }

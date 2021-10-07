@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import shared.Message;
 
@@ -20,18 +21,20 @@ public class Server {
 		
 	}
 
+	// Läuft im seperaten Prozess
 	private void run() {
 		System.out.println("Server is starting..");
 		
-		
 		try {
 			
+			// Erstelle den Server Socket
 			createSocket();
 			System.out.println("Socket created.\nListening to clients..");
 
+			
+			// Gucke, ob es Verbindungen gibt
 			while(true) {
 				listen();				
-			
 			}
 		} catch (IOException e) {
 			System.err.println("Error in run(): " + e.getMessage());
@@ -53,6 +56,8 @@ public class Server {
 		
 	}
 	
+	
+	// Erstelle Socket
 	private void createSocket() {
 		try {
 			ServerSocket socket = new ServerSocket(port);
@@ -68,24 +73,33 @@ public class Server {
 		}
 	}
 	
+	
+	
 	private void listen() throws IOException {
+		
+		// Nehme Socketverbindung an und erstelle einen eigenen Thread für diesen Nutzer
 		Socket userSocket = this.serverSocket.accept();
 		UserThread newUser = new UserThread(userSocket, this);
 			
 		userThreads.add(newUser);
 		newUser.start();	
+		
+		System.out.println("Aktuell im Chat: " + userThreads.size());
 	}
 	
-	public void sendToAll(Message message) {
-		System.out.println("Sending message to clients");
-		for (UserThread userThread : userThreads) {
+	
+	/**
+	 * @param message
+	 */
+	public void sendToChannel(Message message) {
+		for(UserThread userThread : userThreads) {
 			try {
-				userThread.send(message);
+				if (userThread.getChannel() == message.getChannel()) {
+					userThread.send(message);
+				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
 }
